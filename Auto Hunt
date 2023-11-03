@@ -1,0 +1,76 @@
+
+```lua
+itemID = 0 -- Item ID
+worldLength = 0 -- World Length
+
+local function LogText(filename, text)
+    desktopPath = os.getenv("USERPROFILE") .. "\\Desktop\\" .. filename
+    file, err = io.open(desktopPath, "a")
+    file:write(text .. "\n")
+    file:close()
+end
+
+local function warp(worldName)
+    SendPacket(3,"action|join_request\nname|".. worldName .."\ninvitedWorld|0")
+end
+
+local function generateName()
+    result = ""
+    for i = 1, worldLength do
+        randomLetter = string.char(math.random(97, 122))
+        result = result .. randomLetter
+    end
+    return result
+end
+
+local function outputLock()
+    usedLock = ""
+    for _, tile in pairs(getTiles()) do
+        if tile.fg == 202 then
+            usedLock = "Small Lock"
+        elseif tile.fg == 204 then
+            usedLock = "Big Lock"
+        elseif tile.fg == 206 then
+            usedLock = "Huge Lock"
+        elseif tile.fg == 242 then
+            usedLock = "World Lock"
+        end
+    end
+
+    return usedLock
+end
+
+local function isLock()
+    for _, tile in pairs(getTiles()) do
+        if tile.fg ~= 202 or tile.fg ~= 204 or tile.fg ~= 206 or tile.fg ~= 242 then
+            return true
+        end
+    end
+
+    return false
+end
+
+local function isValid()
+    for _, tile in pairs(getTiles()) do
+        if tile.fg == itemID then
+            return true
+        end
+    end
+    return false
+end
+
+while true do
+    while getBot().world ~= nil or getBot().world:upper() == "EXIT" do
+        ::deliTaylor::
+        warp(generateName())
+        Sleep(5000)
+        if isValid() == true and isLock() == false then
+            LogText("NFW.txt","World Name: ".. getBot().world:upper() .." | Farmable: ".. itemInfo(itemID).name)
+            goto deliTaylor
+        elseif isValid() == true and isLock() == true then
+            LogText("LFW.txt","World Name: ".. getBot().world:upper() .." | Farmable: ".. itemInfo(itemID).name .." | Used Lock: ".. outputLock())
+            goto deliTaylor
+        end
+    end
+end
+```
