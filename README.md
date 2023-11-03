@@ -1,2 +1,5 @@
 # Hydrotrium
-- all scripts being provided or given is created by Takishao
+- Script(s) are created by Takishao
+
+# Server
+- [Discord Server](https://discord.gg/wB5WjRxfQW)
